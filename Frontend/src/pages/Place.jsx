@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import MyPlaces from './MyPlaces'
 
 const Place = () => {
     const {action}=useParams()
@@ -11,21 +12,39 @@ const Place = () => {
     const [desc,setDesc]=useState('')
     const [info,setInfo]=useState('')
     const [perk,setPerk]=useState([])
-
+    const [price,setPrice]=useState(1000)
     const [checkIn,setIn]=useState('')
     const [checkOut,setOut]=useState('')
     const [guest,setG]=useState(0)
-
+    const navigate=useNavigate()
+    const addPlace=async(e)=>{
+        e.preventDefault()
+        try {
+            const {data}=await axios.post('http://localhost:4000/api/users/add',{title,address,photo,desc,perk,checkIn,checkOut,guest,info,price},{
+                headers: {  
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                  withCredentials: true
+            })
+            alert(data.message)
+            navigate('/account/places')
+            
+        } catch (error) {
+            console.log(error.response.data.error);
+            alert(error.response.data.error)
+        }
+    }
     const perks=(e)=>{
         const {name,checked}=e.target
         setPerk(prevPerks => {
             if (checked) {
                 const updatedPerks = [...prevPerks, name];
-                console.log(updatedPerks); 
+                // console.log(updatedPerks); 
                 return updatedPerks;
             } else {
                 const updatedPerks = prevPerks.filter((p) => p !== name);
-                console.log(updatedPerks); 
+                // console.log(updatedPerks); 
                 return updatedPerks;
             }
         });
@@ -41,7 +60,7 @@ const Place = () => {
                   },
                   withCredentials: true
             })
-            console.log(res);
+            // console.log(res);
             setPhoto(prev=>{
                 return [...prev,res.data.fileName]
             })
@@ -80,21 +99,19 @@ const Place = () => {
   return (
    <div>
     {action!=='new' && (
-         <div>
-         <div className="py-3 text-center">
-             <Link className='inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full' to={'/account/places/new'}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
- </svg>
-  Add new Place  </Link>
-         </div>
-     </div>
+         <MyPlaces/>
     )}
     {action==='new' && (
-        <form >
+        <form onSubmit={addPlace}>
             <h2 className='text-xl mt-4 px-4' >Title</h2>
             <input type="text" value={title} onChange={(e)=>setTitle(e.target.value)} className='text-gray-500 text-sm' />
             <h2 className='text-xl mt-4 px-4' >Address</h2>
             <input type="text" value={address} onChange={(e)=>setAddress(e.target.value)} className='text-gray-500 text-sm' />
+            <div>
+  <h2 className='text-xl mt-4 px-4' >Price/Night</h2>
+  <input type="number" value={price} 
+                   onChange={ev => setPrice(ev.target.value)}/>
+          </div>
             <h2 className='text-xl mt-4 px-4' >Photos</h2>
             <div className="flex gap-2">
                 <input value={photoL} onChange={(e)=>setPhotoL(e.target.value)} type="text" placeholder='Add using Link' />
@@ -126,7 +143,7 @@ Upload
 <span>Free Parking</span>
     </label>
     <label className='border p-4 flex rounded-2xl gap-2 items-center'>
-        <input type="checkbox" onChange={perks} name='TV' />
+        <input type="checkbox" onChange={perks} checked={perk.includes('TV')} name='TV' />
         <span>TV</span>
     </label>
     <label className='border p-4 flex rounded-2xl gap-2 items-center'>
@@ -166,9 +183,11 @@ Upload
         <input value={guest} onChange={(e)=>setG(e.target.value)} type="Number" placeholder='5' />
     </div>
   </div>
+ 
   <h2 className='text-xl mt-4 px-4' >Extra Info</h2>
 <textarea value={info} onChange={(e)=>setInfo(e.target.value)} name="" id="" placeholder='House Rules,etc.'></textarea>
 
+<button className="primary my-4">Save</button>
 
         </form>
     )}

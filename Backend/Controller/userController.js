@@ -8,6 +8,7 @@ import protectRoutes from '../utils/protectRoutes.js';
 import fs from 'node:fs'
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import Place from '../Models/placeModel.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 export const signUp = async(req,res) => {
@@ -122,3 +123,63 @@ export const uploadPhoto=async(req,res)=>{
         console.log("Error in add Photo ", error);
     }
 }
+
+export const addPlace=async(req,res)=>{
+    try {
+        const {title,address,perk,photo,desc,checkIn,checkOut,info,guest,price}=req.body
+        // console.log(req.user);
+        const newPlace=new Place({owner:req.user._id,title:title,address:address,photos:photo,description:desc,perks:perk,checkIn:checkIn,checkOut:checkOut,maxGuests:guest,extraInfo:info,price:price})
+        await newPlace.save()
+        res.status(200).json({ message: 'Place added successfully' ,place:newPlace})
+
+
+    } catch (error) {
+        res.status(500).json({message: error.message})
+        console.log("Error in add Place ", error);
+    }
+}
+
+export const myPlace=async(req,res)=>{
+    try {
+        const myPlaces=await Place.find({owner:req.user._id})
+        // console.log(myPlaces); 
+        res.status(200).json({ places:myPlaces})
+
+
+    } catch (error) {
+        res.status(500).json({message: error.message})
+        console.log("Error in add Place ", error);
+    }
+}
+
+export const getPlace=async(req,res)=>{
+    try {
+        const {id}=req.body
+        console.log(id);
+        const place=await Place.findById(id)
+        if(!place)return res.status(404).json({message:'Place not Found.'})
+        res.status(200).json({ place:place})
+    } catch (error) {
+        res.status(500).json({message: error.message})
+        console.log("Error in get Place ", error);
+    }
+}
+
+
+export const updatePlace = async (req, res) => {
+    try {
+        const placeData = req.body;
+        const { _id, ...updateData } = placeData;
+
+        const updatedPlace = await Place.findByIdAndUpdate(_id, updateData, { new: true });
+
+        if (!updatedPlace) {
+            return res.status(404).json({ message: 'Place not found.' });
+        }
+
+        res.status(200).json({ message: "Place updated successfully", place: updatedPlace });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        console.error("Error in updatePlace: ", error);
+    }
+};
