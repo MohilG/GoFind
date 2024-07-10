@@ -57,7 +57,7 @@ const BookingPage = () => {
   return (
     <div className="my-8">
       <h1 className="text-3xl">{place.title}</h1>
-      <a href={'https://maps.google.com/?q='+place.address} target='_blank' className="my-2 underline font-semibold block">{place.address}</a>
+      <a href={'https://maps.google.com/?q='+place.address} target='_blank' className="my-2 underline font-semibold  block">{place.address}</a>
       <div className="bg-gray-200 p-6 my-6 rounded-2xl flex items-center justify-between">
         <div>
           <h2 className="text-2xl mb-4">Your booking information:</h2>
