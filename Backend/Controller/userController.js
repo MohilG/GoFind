@@ -9,6 +9,8 @@ import fs from 'node:fs'
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import Place from '../Models/placeModel.js';
+import Booking from '../Models/bookingModel.js';
+import { log } from 'node:console';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 export const signUp = async(req,res) => {
@@ -124,6 +126,90 @@ export const uploadPhoto=async(req,res)=>{
     }
 }
 
+export const myBooking=async(req,res)=>{
+    try {
+        const {id}=req.body
+        // console.log(id);
+        if(!id)return res.status(404).json({message:"User Not Found"})
+        const bookings=await Booking.find({user:id})
+        res.status(200).json({ bookings:bookings })
+
+    } catch (error) {
+        res.status(500).json({message: error.message})
+        console.log("Error in my booking", error);
+    }
+}
+
+export const myBookingId=async(req,res)=>{
+    try {
+        const {id}=req.params
+        console.log(id);
+        if(!id)return res.status(404).json({message:"Booking Not Found"})
+        const booking=await Booking.findById(id)
+        res.status(200).json({ booking:booking })
+
+    } catch (error) {
+        res.status(500).json({message: error.message})
+        console.log("Error in my booking with ID", error);
+    }
+}
+export const bookPlace = async (req, res) => {
+    try {
+        const { place,guests, checkIn, checkOut, phone, user, price } = req.body;
+        // console.log(req.body);
+        // Input validation
+        if (!place || !checkIn || !checkOut || !phone || !user || !price || !guests) {
+            return res.status(400).json({ message: "All fields are required." });
+        }
+
+        // Check date validity
+        const checkInDate = new Date(checkIn);
+        const checkOutDate = new Date(checkOut);
+        // console.log(checkInDate+" "+checkOutDate);
+        if (checkInDate >= checkOutDate) {
+            return res.status(400).json({ message: "Check-out date must be after check-in date." });
+        }
+
+        // // Check place availability
+        const checkPlace = await Place.findById(place);
+        if (!checkPlace) {
+            return res.status(404).json({ message: "Place not found." });
+        }
+        // // Check if the place is already booked for the requested dates
+        const existingBooking = await Booking.findOne({
+            place,
+            $or: [
+                { checkIn: { $lt: checkOutDate, $gte: checkInDate } },
+                { checkOut: { $lte: checkOutDate, $gt: checkInDate } },
+                { checkIn: { $lte: checkInDate }, checkOut: { $gte: checkOutDate } }
+            ]
+        });
+
+        if (existingBooking) {
+            return res.status(409).json({ message: "Place is already booked for the selected dates." });
+        }
+
+        // // Create and save the booking
+        const newBooking = new Booking({
+            place,
+            guests,
+            checkIn: checkInDate,
+            checkOut: checkOutDate,
+            phone,
+            user,
+            price
+        });
+
+        await newBooking.save();
+
+        res.status(201).json({ message: "Booking successful!", booking: newBooking });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        console.log("Error in booking place", error);
+    }
+};
+
+
 export const addPlace=async(req,res)=>{
     try {
         const {title,address,perk,photo,desc,checkIn,checkOut,info,guest,price}=req.body
@@ -155,7 +241,7 @@ export const myPlace=async(req,res)=>{
 export const getPlace=async(req,res)=>{
     try {
         const {id}=req.body
-        console.log(id);
+        // console.log(id);
         const place=await Place.findById(id)
         if(!place)return res.status(404).json({message:'Place not Found.'})
         res.status(200).json({ place:place})
@@ -165,7 +251,15 @@ export const getPlace=async(req,res)=>{
     }
 }
 
-
+export const getAll = async (req, res) => {
+    try {
+        const places = await Place.find();
+        res.status(200).json({ message: "Fetched All Successfully", places: places });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        console.error("Error in getting all Place: ", error);
+    }
+};
 export const updatePlace = async (req, res) => {
     try {
         const placeData = req.body;
@@ -181,5 +275,18 @@ export const updatePlace = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
         console.error("Error in updatePlace: ", error);
+    }
+};
+export const deletePlace = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const place = await Place.findByIdAndDelete(id);
+        if (!place) {
+            return res.status(404).json({ message: 'Place not found.' });
+            }
+        res.status(200).json({ message: "Place deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+        console.error("Error in delete Place: ", error);
     }
 };

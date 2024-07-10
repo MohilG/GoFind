@@ -1,5 +1,6 @@
 import express from 'express'
-import { addPhotoByLink, addPlace, getPlace, logOut, login, myPlace, photosMiddleware, signUp, updatePlace, uploadPhoto } from '../Controller/userController.js'
+
+import { addPhotoByLink,bookPlace, addPlace, deletePlace, getAll, getPlace, logOut, login, myPlace, photosMiddleware, signUp, updatePlace, uploadPhoto, myBooking, myBookingId} from '../Controller/userController.js'
 import protectRoutes from '../utils/protectRoutes.js'
 
 const router=express.Router()
@@ -11,7 +12,15 @@ router.post('/upload',photosMiddleware.array('photos',10),uploadPhoto)
 router.post('/add',protectRoutes,addPlace)
 router.post('/myPlaces',protectRoutes,myPlace)
 router.post('/place',getPlace)
+router.post('/book',bookPlace)
+router.post('/mybooking',myBooking)
+router.post('/mybooking/:id',myBookingId)
+
+
+router.get('/all',getAll)
+
 router.put('/update',updatePlace)
+router.delete('/delete/:id',deletePlace)
 
 
 

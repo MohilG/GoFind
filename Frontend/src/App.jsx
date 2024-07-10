@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil"
 import PlacePage from "./pages/PlacePage"
 import Place from "./pages/Place"
 import EditPlace from "./pages/EditPlace"
+import BookingPage from "./pages/BookingPage"
 
 function App() {
   const user=useRecoilValue(userAtom)
@@ -24,10 +25,12 @@ function App() {
       <Route path="/logout" element={<LogOut/>}/>
       <Route path="/account/:subpage?" element={<Account/>}/>
       <Route path="/account/:subpage/:action?" element={<Account/>}/>
-
+      {/* <Route path='/account/bookings' */}
       {/* <Route path="/account/:subpage/:action" element={<Account/>}/> */}
-      <Route path="/account/place/:id" element={<PlacePage/>}/>
-      <Route path="/account/places/edit/:id" element={<EditPlace/>}/>
+      <Route path="/account/places/:id" element={<PlacePage/>}/>
+      <Route path="/account/booking/:id" element={<BookingPage/>}/>
+
+      <Route path="/account/place/edit/:id" element={<EditPlace/>}/>
 
 
 
