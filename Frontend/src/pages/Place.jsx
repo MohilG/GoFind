@@ -6,8 +6,7 @@ import { useRecoilValue } from 'recoil'
 import userAtom from '../../atoms/userAtom'
 
 const Place = () => {
-    const {action}=useParams()
-    // console.log(action);
+    const { action } = useParams()
     const [title, setTitle] = useState('')
     const [address, setAddress] = useState('')
     const [photo, setPhoto] = useState([])
@@ -22,10 +21,22 @@ const Place = () => {
     const navigate = useNavigate()
 
     const addPlace = async (e) => {
-        const user=useRecoilValue(userAtom)
         e.preventDefault()
+        const user = useRecoilValue(userAtom)
         try {
-            const { data } = await axios.post('https://gofindbackend.onrender.com/api/users/add', { id:user._id,title, address, photo, desc, perk, checkIn, checkOut, guest, info, price }, {
+            const { data } = await axios.post('https://gofindbackend.onrender.com/api/users/add', { 
+                id: user._id, 
+                title, 
+                address, 
+                photo, 
+                desc, 
+                perk, 
+                checkIn, 
+                checkOut, 
+                guest, 
+                info, 
+                price 
+            }, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -34,9 +45,8 @@ const Place = () => {
             })
             alert(data.message)
             navigate('/account/place')
-
         } catch (error) {
-            console.log(error.response.data.error);
+            console.log(error.response.data.error)
             alert(error.response.data.error)
         }
     }
@@ -45,18 +55,15 @@ const Place = () => {
         const { name, checked } = e.target
         setPerk(prevPerks => {
             if (checked) {
-                const updatedPerks = [...prevPerks, name];
-                return updatedPerks;
+                return [...prevPerks, name]
             } else {
-                const updatedPerks = prevPerks.filter((p) => p !== name);
-                return updatedPerks;
+                return prevPerks.filter(p => p !== name)
             }
-        });
+        })
     }
 
     const addPhotoByLink = async (e) => {
         e.preventDefault()
-
         try {
             const res = await axios.post('https://gofindbackend.onrender.com/api/users/uploadLink', { link: photoL }, {
                 headers: {
@@ -65,14 +72,11 @@ const Place = () => {
                 },
                 withCredentials: true
             })
-            setPhoto(prev => {
-                return [...prev, res.data.fileName]
-            })
-            console.log(res);
+            setPhoto(prev => [...prev, res.data.fileName])
             setPhotoL('')
             alert(res.data.message)
         } catch (error) {
-            console.log(error.response.data.error);
+            console.log(error.response.data.error)
             alert(error.response.data.error)
         }
     }
@@ -91,44 +95,43 @@ const Place = () => {
                 withCredentials: true
             })
             const { data } = res
-            setPhoto(prev => {
-                return [...prev, ...data.fileName]
-            })
+            setPhoto(prev => [...prev, ...data.fileName])
         } catch (error) {
-            console.log(error.response.data.error);
+            console.log(error.response.data.error)
             alert(error.response.data.error)
         }
     }
 
     const cover = (filename) => {
-        setPhoto(prev => [filename, ...prev.filter(p => p !== filename)]);
+        setPhoto(prev => [filename, ...prev.filter(p => p !== filename)])
     }
 
     const removePhoto = (filename) => {
-        setPhoto((prevPhotos) => prevPhotos.filter(ph => ph !== filename));
+        setPhoto(prevPhotos => prevPhotos.filter(ph => ph !== filename))
     }
 
     return (
         <div>
-            {action !== 'new' && (
-                <MyPlaces />
-            )}
+            {action !== 'new' && <MyPlaces />}
             {action === 'new' && (
                 <form onSubmit={addPlace}>
                     <h2 className='text-xl mt-4 px-4'>Title</h2>
                     <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className='text-gray-500 text-sm' />
+                    
                     <h2 className='text-xl mt-4 px-4'>Address</h2>
                     <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className='text-gray-500 text-sm' />
+                    
                     <div>
                         <h2 className='text-xl mt-4 px-4'>Price/Night</h2>
-                        <input type="number" value={price}
-                            onChange={ev => setPrice(ev.target.value)} />
+                        <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
                     </div>
+                    
                     <h2 className='text-xl mt-4 px-4'>Photos</h2>
                     <div className="flex gap-2">
                         <input value={photoL} onChange={(e) => setPhotoL(e.target.value)} type="text" placeholder='Add using Link' />
                         <button className='bg-gray-200 px-4 rounded-2xl' onClick={addPhotoByLink}>Add&nbsp;Photo</button>
                     </div>
+                    
                     <div className="cursor-pointer mt-2 grid items-center gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                         {photo.length > 0 && photo.map((item, _id) => (
                             <div className='h-32 flex relative' key={_id}>
@@ -145,6 +148,7 @@ const Place = () => {
                                 </div>
                             </div>
                         ))}
+                        
                         <label className='h-32 flex cursor-pointer gap-1 items-center justify-center border bg-transparent rounded-2xl p-2 '>
                             <input type="file" multiple className='hidden' onChange={uploadPhoto} />
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -153,8 +157,10 @@ const Place = () => {
                             Upload
                         </label>
                     </div>
+                    
                     <h2 className='text-xl mt-4 px-4'>Description</h2>
-                    <textarea value={desc} onChange={(e) => setDesc(e.target.value)} name="" id=""></textarea>
+                    <textarea value={desc} onChange={(e) => setDesc(e.target.value)}></textarea>
+                    
                     <h2 className='text-xl mt-4 px-4'>Perks</h2>
                     <div className='grid grid-cols-2 md:grid-cols-3'>
                         <label className='border p-4 flex rounded-2xl gap-2 items-center'>
@@ -182,32 +188,27 @@ const Place = () => {
                             <span>Free Wifi</span>
                         </label>
                     </div>
-
-                    <h2 className='text-xl mt-4 px-4'>CheckIn & CheckOut </h2>
-                    <div className='grid sm:grid-cols-3 '>
+                    
+                    <h2 className='text-xl mt-4 px-4'>CheckIn & CheckOut</h2>
+                    <div className='grid sm:grid-cols-3'>
                         <div className='flex flex-col gap-2 rounded-2xl items-center'>
                             <h3>Check In Time</h3>
                             <input value={checkIn} onChange={(e) => setIn(e.target.value)} type="text" placeholder='11:00AM' />
                         </div>
                         <div className='flex flex-col gap-2 rounded-2xl items-center'>
-
                             <h3>Check Out Time</h3>
-
                             <input value={checkOut} onChange={(e) => setOut(e.target.value)} type="text" placeholder='11:00AM' />
                         </div>
-
                         <div className='flex flex-col gap-2 rounded-2xl items-center'>
                             <h3>Number of Guests</h3>
-
-                            <input value={guest} onChange={(e) => setG(e.target.value)} type="Number" placeholder='5' />
+                            <input value={guest} onChange={(e) => setG(e.target.value)} type="number" placeholder='5' />
                         </div>
                     </div>
-
+                    
                     <h2 className='text-xl mt-4 px-4'>Extra Info</h2>
-                    <textarea value={info} onChange={(e) => setInfo(e.target.value)} name="" id="" placeholder='House Rules,etc.'></textarea>
-
+                    <textarea value={info} onChange={(e) => setInfo(e.target.value)} placeholder='House Rules, etc.'></textarea>
+                    
                     <button className="primary my-4">Save</button>
-
                 </form>
             )}
         </div>
