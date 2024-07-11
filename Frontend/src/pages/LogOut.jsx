@@ -6,7 +6,7 @@ const LogOut = () => {
     const setUser=useSetRecoilState(userAtom)
     const logout=async(req,res)=>{
         try {
-            const res=await axios.post('http://localhost:4000/api/users/logout',{},{
+            const res=await axios.post('https://gofindbackend.onrender.com/api/users/logout',{},{
               headers: {  
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

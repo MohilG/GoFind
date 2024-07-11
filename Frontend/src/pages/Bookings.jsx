@@ -15,7 +15,7 @@ export default function Bookings() {
     const fetchBookings = async () => {
       try {
         const res = await axios.post(
-          'http://localhost:4000/api/users/mybooking',
+          'https://gofindbackend.onrender.com/api/users/mybooking',
           { id: user._id },
           {
             headers: {
@@ -32,7 +32,7 @@ export default function Bookings() {
         const placeResponses = await Promise.all(
           placeIds.map(placeId =>
             axios.post(
-              'http://localhost:4000/api/users/place',
+              'https://gofindbackend.onrender.com/api/users/place',
               { id: placeId },
               {
                 headers: {
@@ -49,6 +49,7 @@ export default function Bookings() {
         placeResponses.forEach(response => {
           placesMap[response.data.place._id] = response.data.place;
         });
+        console.log(placesMap);
         setPlaces(placesMap);
       } catch (error) {
         alert(error.response.data.error);
@@ -68,7 +69,7 @@ export default function Bookings() {
             className="flex gap-4 my-5 bg-gray-200 rounded-2xl overflow-hidden"
           >
             <div className="w-64">
-              <Image className='object-cover' src={places[booking.place]?.photos[0]} alt="" />
+              <img className='object-cover' src={places[booking.place]?.photos[0]} alt="" />
             </div>
             <div className="px-3 py-5 grow">
               <h2 className="text-xl">{places[booking.place]?.title}</h2>

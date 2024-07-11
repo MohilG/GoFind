@@ -16,7 +16,7 @@ import BookingPage from "./pages/BookingPage"
 
 function App() {
   const user=useRecoilValue(userAtom)
-  // axios.default.baseURL='http://localhost:4000'
+  // axios.default.baseURL='https://gofindbackend.onrender.com'
   return (
     <Routes>
       <Route path="/" element={<Layout/>}>

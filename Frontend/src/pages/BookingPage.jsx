@@ -14,7 +14,7 @@ const BookingPage = () => {
     const fetchBooking = async () => {
       try {
         const res = await axios.post(
-          `http://localhost:4000/api/users/mybooking/${id}`,
+          `https://gofindbackend.onrender.com/api/users/mybooking/${id}`,
           {},
           {
             headers: {
@@ -30,7 +30,7 @@ const BookingPage = () => {
 
         // Fetch the place associated with the booking
         const placeRes = await axios.post(
-          'http://localhost:4000/api/users/place',
+          'https://gofindbackend.onrender.com/api/users/place',
           { id: bookingData.place },
           {
             headers: {

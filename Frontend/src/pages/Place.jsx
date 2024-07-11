@@ -22,7 +22,7 @@ const Place = () => {
     const addPlace = async (e) => {
         e.preventDefault()
         try {
-            const { data } = await axios.post('http://localhost:4000/api/users/add', { title, address, photo, desc, perk, checkIn, checkOut, guest, info, price }, {
+            const { data } = await axios.post('https://gofindbackend.onrender.com/api/users/add', { title, address, photo, desc, perk, checkIn, checkOut, guest, info, price }, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -55,7 +55,7 @@ const Place = () => {
         e.preventDefault()
 
         try {
-            const res = await axios.post('http://localhost:4000/api/users/uploadLink', { link: photoL }, {
+            const res = await axios.post('https://gofindbackend.onrender.com/api/users/uploadLink', { link: photoL }, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -65,6 +65,7 @@ const Place = () => {
             setPhoto(prev => {
                 return [...prev, res.data.fileName]
             })
+            console.log(res);
             setPhotoL('')
             alert(res.data.message)
         } catch (error) {
@@ -80,7 +81,7 @@ const Place = () => {
             for (let i = 0; i < files.length; i++) {
                 formData.append('photos', files[i])
             }
-            const res = await axios.post('http://localhost:4000/api/users/upload', formData, {
+            const res = await axios.post('https://gofindbackend.onrender.com/api/users/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
@@ -128,7 +129,7 @@ const Place = () => {
                     <div className="cursor-pointer mt-2 grid items-center gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                         {photo.length > 0 && photo.map((item, _id) => (
                             <div className='h-32 flex relative' key={_id}>
-                                <img className='h-full w-full object-cover rounded-2xl' src={"http://localhost:4000/upload/" + item} alt="" />
+                                <img className='h-full w-full object-cover rounded-2xl' src={item} alt="" />
                                 <div onClick={() => removePhoto(item)} className="absolute bottom-1 right-1 text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />

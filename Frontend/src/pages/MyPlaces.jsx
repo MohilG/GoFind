@@ -8,7 +8,7 @@ const MyPlaces = () => {
     useEffect(() => {
         const fetchPlaces = async () => {
             try {
-                const res = await axios.post('http://localhost:4000/api/users/myPlaces', {}, {
+                const res = await axios.post('https://gofindbackend.onrender.com/api/users/myPlaces', {}, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -27,7 +27,7 @@ const MyPlaces = () => {
     }, []);
     const deletePlace=async(id)=>{
         try {
-            const res=await axios.delete(`http://localhost:4000/api/users/delete/${id}`,{},{
+            const res=await axios.delete(`https://gofindbackend.onrender.com/api/users/delete/${id}`,{},{
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ const MyPlaces = () => {
                     <div key={place._id} className="cursor-pointer flex gap-4 mt-2 min-h-40 bg-gray-200 rounded-2xl p-4">
                         <Link to={'/account/places/' + place._id} className="max-h-32 max-w-32 grow shrink-0">
                             {place.photos.length > 0 && (
-                                <img className='h-32 w-32 object-contain rounded-2xl' src={"http://localhost:4000/upload/" + place.photos[0]} alt="" />
+                                <img className='h-32 w-32 object-contain rounded-2xl' src={ place.photos[0]} alt="" />
                             )}
                         </Link>
                         <div className="w-full grow-0 shrink">

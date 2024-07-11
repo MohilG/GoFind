@@ -12,7 +12,7 @@ const Login = () => {
    const userData=async(e)=>{
     e.preventDefault()
     try {
-      const res=await axios.post('http://localhost:4000/api/users/login',{email,password},{
+      const res=await axios.post('https://gofindbackend.onrender.com/api/users/login',{email,password},{
         headers: {  
           'Accept': 'application/json',
           'Content-Type': 'application/json'

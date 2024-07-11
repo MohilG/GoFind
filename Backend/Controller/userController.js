@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import User from '../Models/userModel.js';
 import jwt from 'jsonwebtoken'
+import {v2 as cloudinary} from 'cloudinary'
 import multer from 'multer'
 import imageDownLoader from 'image-downloader'
 import generateTokenCookie from '../utils/generateCookies.js';
@@ -10,9 +11,9 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import Place from '../Models/placeModel.js';
 import Booking from '../Models/bookingModel.js';
-import { log } from 'node:console';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
 export const signUp = async(req,res) => {
     // console.log(req.body);
 try {
@@ -105,25 +106,27 @@ export const addPhotoByLink=async(req,res)=>{
         }
 }
 export const photosMiddleware = multer({ dest: join(__dirname, '../uploads/') });
+export const uploadPhoto = async (req, res) => {
+    // console.log(req);
+  try {
+    const uploadedFiles = [];
 
-export const uploadPhoto=async(req,res)=>{
-    try {
-        // console.log(req.files);
-        const uploadedFiles=[]
-        for(let i=0;i<req.files.length;i++){
-            const {path,originalname,filename}=req.files[i]
-            const parts=originalname.split('.')
-            const ext=parts[parts.length-1]
+    for (let i = 0; i < req.files.length; i++) {
+      const filePath = req.files[i].path;
+      const uploadImg = await cloudinary.uploader.upload(filePath);
+      const img = uploadImg.secure_url;
+      uploadedFiles.push(img);
 
-           const newPath=path+'.'+ext
-           fs.renameSync(path,newPath)
-           uploadedFiles.push(filename+'.'+ext)
+      // Remove file from server after upload
+      fs.unlinkSync(filePath);
+    
         }
+        console.log(uploadedFiles);
         res.status(200).json({ message: 'Image uploaded successfully' ,fileName:uploadedFiles  })
     } catch (error) {
         res.status(500).json({message: error.message})
         console.log("Error in add Photo ", error);
-    }
+    }   
 }
 
 export const myBooking=async(req,res)=>{

@@ -8,7 +8,7 @@ const Home = () => {
   useEffect(()=>{
     const fetchAll=async()=>{
       try {
-        const res = await axios.get('http://localhost:4000/api/users/all', {}, {
+        const res = await axios.get('https://gofindbackend.onrender.com/api/users/all', {}, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ const Home = () => {
         <div className="max-w-sm rounded overflow-hidden shadow-lg" key={id}>
         {place.photos?.[0] && (
           <div className="flex justify-center items-center">
-            <img  className=' bg-gray-600 rounded-2xl w-300 aspect-auto ' src={'http://localhost:4000/upload/'+place.photos?.[0]} alt="" />
+            <img  className=' bg-gray-600 rounded-2xl w-300 aspect-auto ' src={place.photos?.[0]} alt="" />
           </div>
         )}
         <div className="px-6 py-4">

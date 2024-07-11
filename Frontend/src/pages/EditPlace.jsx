@@ -35,7 +35,7 @@ const EditPlace = () => {
                 formData.append('photos', files[i]);
             }
 
-            const res = await axios.post('http://localhost:4000/api/users/upload', formData, {
+            const res = await axios.post('https://gofindbackend.onrender.com/api/users/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
@@ -65,7 +65,7 @@ const EditPlace = () => {
     const updatePlace = async(e) => {
         e.preventDefault();
         try {
-            const res = await axios.put('http://localhost:4000/api/users/update', place, {
+            const res = await axios.put('https://gofindbackend.onrender.com/api/users/update', place, {
                 headers: {  
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ const EditPlace = () => {
         e.preventDefault()
 
         try {
-            const res = await axios.post('http://localhost:4000/api/users/uploadLink', {link: photoL}, {
+            const res = await axios.post('https://gofindbackend.onrender.com/api/users/uploadLink', {link: photoL}, {
                 headers: {  
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -117,7 +117,7 @@ const EditPlace = () => {
         // console.log(id)
         const fetchPlace = async() => {
             try {
-                const res = await axios.post('http://localhost:4000/api/users/place', { id }, {
+                const res = await axios.post('https://gofindbackend.onrender.com/api/users/place', { id }, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -159,7 +159,7 @@ const EditPlace = () => {
             <div className="cursor-pointer mt-2 grid items-center gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                 {place.photos.length > 0 && place.photos.map((item, _id) => (
                     <div className='h-32 flex relative' key={_id}>
-                        <img className='h-full w-full object-cover rounded-2xl' src={"http://localhost:4000/upload/" + item} alt="" />
+                        <img className='h-full w-full object-cover rounded-2xl' src={item} alt="" />
                         <div onClick={() => removePhoto(item)} className="absolute bottom-1 right-1 text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />

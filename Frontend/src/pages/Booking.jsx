@@ -20,7 +20,7 @@ export default function Booking({place}) {
   }
 
   async function bookThisPlace() {
-    const response = await axios.post('http://localhost:4000/api/users/book', {
+    const response = await axios.post('https://gofindbackend.onrender.com/api/users/book', {
       checkIn,checkOut,guests:numberOfGuests,user:user._id,phone,
       place,
       price:numberOfNights * place.price*1.05,
