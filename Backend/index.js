@@ -15,7 +15,7 @@ const app=express()
 
 app.use(cors({
     credentials:true,
-    origin:'http://localhost:5173'
+    origin:'https://gofind-24eg.onrender.com/'
 }))
 dotenv.config()
 cloudinary.config({
