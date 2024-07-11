@@ -23,12 +23,13 @@ function App() {
       <Route index element={user?<Home/>:<Navigate to={'/login'}/>}/>
       <Route  path='/login' element={!user?<Login/>:<Navigate to={'/'}/>} />
       <Route path="/logout" element={<LogOut/>}/>
-      <Route path="/account/:subpage?" element={<Account/>}/>
-      <Route path="/account/:subpage/:action?" element={<Account/>}/>
+      <Route path="/account/:subpage" element={<Account/>}/>
+      <Route path="/account/:subpage/:action" element={<Account/>}/>
       {/* <Route path='/account/bookings' */}
       {/* <Route path="/account/:subpage/:action" element={<Account/>}/> */}
       <Route path="/account/places/:id" element={<PlacePage/>}/>
       <Route path="/account/booking/:id" element={<BookingPage/>}/>
+      {/* <Route path="/account/place/edit/:id" element={<EditPlace/>}/> */}
 
       <Route path="/account/place/edit/:id" element={<EditPlace/>}/>
 

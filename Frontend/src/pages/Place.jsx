@@ -109,7 +109,7 @@ const Place = () => {
 
     return (
         <div>
-            {action !== 'new' && (
+            {action === 'list' && (
                 <MyPlaces />
             )}
             {action === 'new' && (
