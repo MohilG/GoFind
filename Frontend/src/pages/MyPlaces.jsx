@@ -1,14 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import userAtom from '../../atoms/userAtom';
 
 const MyPlaces = () => {
     const [places, setPlaces] = useState([]);
-
+    const user=useRecoilValue(userAtom)
     useEffect(() => {
         const fetchPlaces = async () => {
             try {
-                const res = await axios.post('https://gofindbackend.onrender.com/api/users/myPlaces', {}, {
+                const res = await axios.post('https://gofindbackend.onrender.com/api/users/myPlaces', {id:user._id}, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'

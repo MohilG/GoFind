@@ -215,9 +215,9 @@ export const bookPlace = async (req, res) => {
 
 export const addPlace=async(req,res)=>{
     try {
-        const {title,address,perk,photo,desc,checkIn,checkOut,info,guest,price}=req.body
+        const {id,title,address,perk,photo,desc,checkIn,checkOut,info,guest,price}=req.body
         // console.log(req.user);
-        const newPlace=new Place({owner:req.user._id,title:title,address:address,photos:photo,description:desc,perks:perk,checkIn:checkIn,checkOut:checkOut,maxGuests:guest,extraInfo:info,price:price})
+        const newPlace=new Place({owner:id,title:title,address:address,photos:photo,description:desc,perks:perk,checkIn:checkIn,checkOut:checkOut,maxGuests:guest,extraInfo:info,price:price})
         await newPlace.save()
         res.status(200).json({ message: 'Place added successfully' ,place:newPlace})
 
@@ -230,7 +230,7 @@ export const addPlace=async(req,res)=>{
 
 export const myPlace=async(req,res)=>{
     try {
-        const myPlaces=await Place.find({owner:req.user._id})
+        const myPlaces=await Place.find({owner:req.body.id})
         // console.log(myPlaces); 
         res.status(200).json({ places:myPlaces})
 

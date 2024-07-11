@@ -2,6 +2,8 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import MyPlaces from './MyPlaces'
+import { useRecoilValue } from 'recoil'
+import userAtom from '../../atoms/userAtom'
 
 const Place = () => {
     const {action}=useParams()
@@ -20,9 +22,10 @@ const Place = () => {
     const navigate = useNavigate()
 
     const addPlace = async (e) => {
+        const user=useRecoilValue(userAtom)
         e.preventDefault()
         try {
-            const { data } = await axios.post('https://gofindbackend.onrender.com/api/users/add', { title, address, photo, desc, perk, checkIn, checkOut, guest, info, price }, {
+            const { data } = await axios.post('https://gofindbackend.onrender.com/api/users/add', { id:user._id,title, address, photo, desc, perk, checkIn, checkOut, guest, info, price }, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
